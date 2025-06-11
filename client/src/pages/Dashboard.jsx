@@ -9,6 +9,7 @@ import {
   InputLabel,
   FormControlLabel,
   Paper,
+  Stack,
   Select,
   Divider,
   MenuItem,
@@ -104,11 +105,9 @@ const Dashboard = () => {
             + Add Job
           </Button>
         </Box>
-
         {/* Search and Filter */}
         <Box
           sx={{
-            mt: 5,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -117,20 +116,19 @@ const Dashboard = () => {
         >
           <TextField
             fullWidth
-            color="rgb(0,0,0)"
-            label="Search job by company, position..."
+            label="Search by company or position..."
             variant="outlined"
             sx={{
               width: 500,
-              backgroundColor: "rgb(89, 222, 198)",
-              "& .MuiOutlinedInput-root": {
-                borderRadius: "18px", // or any value like "8px"
-              },
+              backgroundColor: "white",
             }}
           />
 
           <FormControl
-            sx={{ mt: 5, width: 500, backgroundColor: "rgb(197, 224, 231)" }}
+            sx={{
+              width: 500,
+              backgroundColor: "white",
+            }}
           >
             <InputLabel>Status</InputLabel>
             <Select
@@ -145,6 +143,68 @@ const Dashboard = () => {
               ))}
             </Select>
           </FormControl>
+        </Box>
+        <Divider sx={{ mt: 5 }} />
+
+        <Box
+          sx={{
+            mt: 4,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 4,
+          }}
+        >
+          {jobApplications.map((app, idx) => (
+            <Paper
+              key={idx}
+              elevation={6}
+              sx={{
+                p: 3,
+                width: 500,
+                backgroundColor: "white",
+                borderRadius: 3,
+              }}
+            >
+              <Stack spacing={1}>
+                <Typography variant="h6" fontWeight="bold" color="primary">
+                  {app.job_title}
+                </Typography>
+                <Typography variant="subtitle1">{app.company_name}</Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Status: {app.application_status}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Salary: {app.salary_range}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Location: {app.job_location}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  application_url: {app.application_url}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  notes: {app.notes}
+                </Typography>
+              </Stack>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: 2,
+                  mt: 3,
+                }}
+              >
+                <Button variant="contained" color="primary">
+                  Edit
+                </Button>
+                <Button variant="contained" color="error">
+                  Delete
+                </Button>
+              </Box>
+            </Paper>
+          ))}
         </Box>
       </Box>
     </Paper>

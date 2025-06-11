@@ -74,14 +74,18 @@ const Login = ({ onLogin }) => {
         }}
       >
         <TextField
+          required
           label="Email"
+          placeholder="Enter an email/username."
           variant="outlined"
           fullWidth
           value={email} // Controlled component: value prop
           onChange={(e) => setEmail(e.target.value)} // Controlled component: onChange prop
         />
         <TextField
+          required
           label="Password"
+          placeholder="Enter a password."
           variant="outlined"
           type="password"
           fullWidth

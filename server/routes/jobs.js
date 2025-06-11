@@ -32,24 +32,7 @@ jobRouter.get("/", async (req, res) => {
   }
 });
 
-// Get specific job applicatiosn (may not use in frontend)
-jobRouter.get("/:id", async (req, res) => {
-  try {
-    const job_id = req.params.id;
-    const job_application = jobs.find((job) => String(job.job_id) === job_id);
-
-    if (!job_application) {
-      return res.status(404).json({ message: "Job not found" });
-    }
-
-    res.status(200).json(job_application);
-  } catch (error) {
-    console.log("Error fetching job application: ", error.message);
-    res.status(500).json({ message: "Server error. Please try again later." });
-  }
-});
-
-// Update a job application
+// Update job application
 jobRouter.put("/:id", async (req, res) => {
   try {
     const job_id = req.params.id;
@@ -68,7 +51,7 @@ jobRouter.put("/:id", async (req, res) => {
   }
 });
 
-// Delete a job application
+// Delete job application
 jobRouter.delete("/:id", async (req, res) => {
   try {
     const job_id = req.params.id;

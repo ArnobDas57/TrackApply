@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { jobRouter } from "./routes/jobs.js";
 import { authRouter } from "./routes/auth.js";
 import dotenv from "dotenv";
 dotenv.config();
 
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 const app = express();
 
 // initialize middleware
