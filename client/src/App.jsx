@@ -4,50 +4,95 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-
-import { Box, CssBaseline, Fade, Grow } from "@mui/material";
+import { Box, CssBaseline, Typography, Paper, Alert } from "@mui/material";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
-import { useState } from "react";
+import { useState, createContext } from "react";
+
+export const ThemeContext = createContext();
 
 function App() {
-  // using global state management to manage auth
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isDarkThemed, setIsDarkThemed] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Example auth state
 
   return (
     <Router>
-      <CssBaseline />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: "100vh",
-          alignContent: "center",
-          alignItems: "center",
-          background:
-            "linear-gradient(to left,rgb(87, 175, 159),rgb(119, 132, 190))",
-        }}
-      >
-        <Header />
+      <ThemeContext.Provider value={isDarkThemed}>
+        <CssBaseline />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "100vh",
+            background:
+              "linear-gradient(to left,rgb(87, 175, 159),rgb(119, 132, 190))",
+          }}
+        >
+          <Header />
 
-        <Routes>
-          <Route
-            path="/login"
-            element={<Login onLogin={() => setIsAuthenticated(true)} />}
-          />
-          <Route path="/register" element={<Register />} />{" "}
-          {/* Add onRegister prop if needed */}
-          {/* Protected route (Dashboard) */}
-          <Route
-            path="/dashboard"
-            element={
-              isAuthenticated ? <Dashboard /> : <Navigate to="/login" replace />
-            }
-          />
-        </Routes>
-      </Box>
+          <Box>
+            <Routes>
+              {/* Public routes */}
+              <Route
+                path="/login"
+                element={<Login onLogin={() => setIsAuthenticated(true)} />}
+              />
+
+              <Route
+                path="/register"
+                element={<Register onRegister={() => {}} />}
+              />
+
+              {/* Protected routes */}
+              <Route
+                path="/dashboard"
+                element={
+                  isAuthenticated ? (
+                    <Dashboard />
+                  ) : (
+                    <Navigate to="/login" replace />
+                  )
+                }
+              />
+
+              {/* Redirect from root to login if not authenticated, or dashboard if authenticated */}
+              <Route
+                path="/"
+                element={
+                  isAuthenticated ? (
+                    <Navigate to="/dashboard" replace />
+                  ) : (
+                    <Navigate to="/login" replace />
+                  )
+                }
+              />
+
+              {/* Optional: 404 Not Found page */}
+              <Route
+                path="*"
+                element={
+                  <Paper
+                    sx={{
+                      p: 1,
+                      width: 220,
+                      mx: "auto",
+                      mb: 5,
+                      borderRadius: "4px",
+                      backgroundColor: "red",
+                    }}
+                  >
+                    <Alert variant="filled" severity="error">
+                      404 - Page Not Found
+                    </Alert>
+                  </Paper>
+                }
+              />
+            </Routes>
+          </Box>
+        </Box>
+      </ThemeContext.Provider>
     </Router>
   );
 }

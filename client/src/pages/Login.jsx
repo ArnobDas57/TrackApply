@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react"; // Fixed: useState imported from 'react'
+import { useNavigate } from "react-router-dom";
 import {
   Box,
   Button,
@@ -14,7 +15,24 @@ import { FaGithub } from "react-icons/fa";
 import { FaFacebookSquare } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
 
-const Login = () => {
+const Login = ({ onLogin }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+
+    // call authentication API
+    console.log("Attempting login with:", { email, password });
+
+    if (onLogin) {
+      onLogin(email, password);
+    }
+
+    navigate("/"); // Redirect to dashboard after successful login
+  };
+
   return (
     <Paper
       elevation={6}
@@ -26,7 +44,6 @@ const Login = () => {
         borderRadius: "4px",
       }}
     >
-      {/* Top section with custom background */}
       <Box
         sx={{
           backgroundColor: "rgb(51, 117, 222)",
@@ -45,9 +62,9 @@ const Login = () => {
 
       <Divider />
 
-      {/* Bottom section with default background */}
       <Box
         component="form"
+        onSubmit={handleLogin} // Added onSubmit handler
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -56,12 +73,20 @@ const Login = () => {
           borderRadius: "8px 8px 0 0",
         }}
       >
-        <TextField label="Email" variant="outlined" fullWidth />
+        <TextField
+          label="Email"
+          variant="outlined"
+          fullWidth
+          value={email} // Controlled component: value prop
+          onChange={(e) => setEmail(e.target.value)} // Controlled component: onChange prop
+        />
         <TextField
           label="Password"
           variant="outlined"
           type="password"
           fullWidth
+          value={password} // Controlled component: value prop
+          onChange={(e) => setPassword(e.target.value)} // Controlled component: onChange prop
         />
 
         <FormControlLabel
@@ -70,6 +95,7 @@ const Login = () => {
         />
 
         <Button
+          type="submit" // Added type="submit" to trigger form submission
           variant="contained"
           sx={{
             fontSize: "1rem",
@@ -137,19 +163,18 @@ const Login = () => {
             mt: 1,
           }}
         >
-          {/* Wrapped each icon in a Box with sx prop for styling */}
           <Box
             sx={{
-              display: "flex", // Make sure icon is centered if padding is added
+              display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              width: 45, // Set a fixed width/height for the hoverable area
+              width: 45,
               height: 45,
-              borderRadius: "50%", // Make it circular
+              borderRadius: "50%",
               cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out", // Smooth transition for background
+              transition: "background-color 0.2s ease-in-out",
               "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)", // Light gray on hover
+                backgroundColor: "rgb(113, 134, 137)",
               },
             }}
           >

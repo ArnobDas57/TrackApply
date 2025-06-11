@@ -15,20 +15,18 @@ import { FaFacebookSquare } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
 
 const Register = () => {
-  // Renamed the component from Login to Register
   return (
     <Paper
       elevation={6}
       sx={{
         p: 0,
-        width: "100%", // Using 100% with maxWidth for responsiveness
+        width: "100%",
         maxWidth: 600,
         mx: "auto",
         mb: 5,
         borderRadius: "4px",
       }}
     >
-      {/* Top section with custom background */}
       <Box
         sx={{
           backgroundColor: "rgb(51, 117, 222)",
@@ -41,13 +39,12 @@ const Register = () => {
           align="center"
           sx={{ fontSize: "1.5rem", fontWeight: "bold", color: "white" }}
         >
-          Sign Up for TrackApply {/* Changed text to "Sign Up" */}
+          Sign Up for TrackApply
         </Typography>
       </Box>
 
       <Divider />
 
-      {/* Bottom section with default background */}
       <Box
         component="form"
         sx={{
@@ -64,7 +61,7 @@ const Register = () => {
           type="password"
           fullWidth
         />
-        {/* Added Confirm Password field */}
+
         <TextField
           label="Confirm Password"
           variant="outlined"
@@ -72,7 +69,6 @@ const Register = () => {
           fullWidth
         />
 
-        {/* Changed "Remember me" to a terms and conditions checkbox */}
         <FormControlLabel
           control={<Checkbox defaultChecked />}
           label={
@@ -106,10 +102,9 @@ const Register = () => {
             },
           }}
         >
-          Sign Up {/* Changed button text to "Sign Up" */}
+          Sign Up
         </Button>
 
-        {/* Changed "Don't have an account? Sign Up" to "Already have an account? Login" */}
         <Typography
           variant="body2"
           sx={{
@@ -122,7 +117,7 @@ const Register = () => {
             },
           }}
         >
-          Already have an account? Login {/* Link to login page */}
+          Already have an account? Login
         </Typography>
 
         <Divider sx={{ my: 2 }} textAlign="center">
@@ -133,7 +128,7 @@ const Register = () => {
               fontWeight: "bold",
             }}
           >
-            Or sign up with {/* Changed text to "Or sign up with" */}
+            Or sign up with
           </Typography>
         </Divider>
 
@@ -145,7 +140,6 @@ const Register = () => {
             mt: 1,
           }}
         >
-          {/* Social icons remain the same for consistency */}
           <Box
             sx={{
               display: "flex",
@@ -223,4 +217,4 @@ const Register = () => {
   );
 };
 
-export default Register; // Export the new component as Register
+export default Register;

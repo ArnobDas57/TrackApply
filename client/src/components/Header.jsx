@@ -6,14 +6,13 @@ const Header = () => {
   return (
     <Box
       sx={{
-        width: "100%", // Ensures the header spans the full width
+        width: "100%", 
         display: "flex",
-        justifyContent: "center", // Horizontally center the icon and text
-        alignItems: "center", // Vertically center the icon and text
+        justifyContent: "center", 
+        alignItems: "center", 
         gap: 1.5,
         py: 3,
-        mb: 4 // Add some vertical padding for visual comfort
-        // Removed mb: 5 as spacing below the header can be handled by the content area or a smaller gap
+        mb: 4 
       }}
     >
       <SiPivotaltracker size="40" color="rgb(136, 227, 183)" />
