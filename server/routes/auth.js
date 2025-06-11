@@ -31,11 +31,10 @@ authRouter.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   const user = users.find((u) => u.username === username);
-  if (!user) return res.status(400).json({ message: "Invalid Credentials " });
+  if (!user) return res.status(400).json({ message: "Invalid Credentials" });
 
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch)
-    return res.status(400).json({ message: "Invalid credentials " });
+  if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
 
   const token = jwt.sign(
     { id: user.id, username: user.username },

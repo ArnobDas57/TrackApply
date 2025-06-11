@@ -1,9 +1,10 @@
 import express from "express";
-
 // data for test purposes
 import { jobs } from "../test_data/data.js";
+import { verifyToken } from "../middleware/auth.js";
 
 export const jobRouter = express.Router();
+jobRouter.use(verifyToken);
 
 // Add a new job application
 jobRouter.post("/", async (req, res) => {
