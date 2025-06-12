@@ -1,48 +1,69 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { users } from "../test_data/data.js";
-
+import pool from "../db.js";
 export const authRouter = express.Router();
 
 // Signup Route
 authRouter.post("/signup", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, email, password } = req.body;
 
-  const userExists = users.find((u) => u.username === username);
+  try {
+    // check if user already exists
+    const existingUser = await pool.query(
+      "SELECT * FROM users WHERE username = $1 OR email = $2",
+      [username, email]
+    );
 
-  if (userExists)
-    return res.status(400).json({ message: "User already exists" });
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ message: "User already exists " });
+    }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = {
-    id: users.length,
-    username,
-    password: hashedPassword,
-  };
+    const result = await pool.query(
+      "INSERT INTO users (username, email, password) VALUES ($!, $2, $3) RETURNING id, username",
+      [username, email, hashedPassword]
+    );
 
-  users.push(newUser);
-  res.status(201).json({ message: "User registered successfully" });
+    const newUser = result.rows[0];
+
+    res
+      .status(201)
+      .json({ message: "User registered successfully", user: newUser });
+  } catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ message: "Internal server error " });
+  }
 });
 
 // Login Route
 authRouter.post("/login", async (req, res) => {
-  const { username, password } = req.body;
+  const { identifier, password } = req.body;
 
-  const user = users.find((u) => u.username === username);
-  if (!user) return res.status(400).json({ message: "Invalid Credentials" });
+  try {
+    const result = await pool.query(
+      "SELECT * FROM users WHERE username = $1 OR email = $1",
+      [identifier]
+    );
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
+    const user = result.rows[0];
 
-  const token = jwt.sign(
-    { id: user.id, username: user.username },
-    process.env.JWT_SECRET,
-    {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    }
-  );
+    if (!user) return res.status(400).json({ message: "Invalid credentials" });
 
-  res.status(200).json({ token });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid credentials" });
+
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
+
+    res.status(200).json({ token });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server error" });
+  }
 });
