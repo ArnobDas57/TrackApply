@@ -2,59 +2,36 @@ TrackApply: Job Application Tracker
 TrackApply is a full-stack web application designed to help users efficiently manage and track their job applications. It features a React frontend, a Node.js Express backend, and uses PostgreSQL (via Supabase) for data storage.
 
 Table of Contents
-Features
-
-Prerequisites
-
-Getting Started
-
-1. Database Setup (Supabase)
-
-2. Backend Setup
-
-3. Frontend Setup
-
-Running Tests
-
-Project Structure
-
-Contributing
-
-License
+1. Features
+2. Prerequisites
+3. Getting Started
+    1. Database Setup (Supabase)
+    2. Backend Setup
+    3. Frontend Setup
 
 Features
-User Authentication: Secure signup and login for users.
-
-Job Application Tracking: Add, view, edit, and delete job application records.
-
-Application Statuses: Track job progress with predefined statuses (Wishlist, Applied, Shortlisted, Interviewing, Offer, Rejected).
-
-Search and Filter: Easily find applications by company/position and filter by status.
-
-Responsive UI: Built with Material-UI for a modern and adaptive user experience.
-
-Dark Theme: Toggle between light and dark modes.
+- User Authentication: Secure signup and login for users.
+- Job Application Tracking: Add, view, edit, and delete job application records.
+- Application Statuses: Track job progress with predefined statuses (Wishlist, Applied, Shortlisted, Interviewing, Offer, Rejected).
+- Search and Filter: Easily find applications by company/position and filter by status.
+- Responsive UI: Built with Material-UI for a modern and adaptive user experience.
+- Dark Theme: Toggle between light and dark modes.
 
 Prerequisites
 Before you begin, ensure you have the following installed on your machine:
-
-Node.js & npm (or Yarn): Download Node.js (npm is included).
-
-Verify installation: node -v and npm -v
-
-PostgreSQL Client (Optional, but recommended): For direct database interaction, psql or a GUI like DBeaver/pgAdmin.
-
-Git: For cloning the repository.
+- Node.js & npm (or Yarn): Download Node.js (npm is included).
+- Verify installation: node -v and npm -v
+- PostgreSQL Client (Optional, but recommended): For direct database interaction, psql or a GUI like DBeaver/pgAdmin.
+- Git: For cloning the repository.
 
 Getting Started
 Follow these steps to get TrackApply up and running on your local machine.
 
 1. Database Setup (Supabase)
+   
 This project uses PostgreSQL as its database, hosted and managed by Supabase.
-
-Create a Supabase Account:
-
-Go to Supabase and sign up for a free account.
+    Create a Supabase Account:
+    - Go to Supabase and sign up for a free account.
 
 Create a New Project:
 
@@ -157,3 +134,4 @@ Navigate to Frontend Directory:
 Open a new terminal window and navigate to the frontend directory:
 
 cd ../frontend # Or cd client, depending on your project structure
+
