@@ -109,7 +109,6 @@ cd backend # or cd server, depending on your project structure
 Install Dependencies:
 
 npm install
-# or yarn install
 
 Create .env File:
 
