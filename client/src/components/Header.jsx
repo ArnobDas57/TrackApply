@@ -117,7 +117,7 @@ const Header = () => {
             <Stack direction="row" spacing={4} alignItems="center">
               <Stack direction="row" spacing={1.5} alignItems="center">
                 <Typography
-                  sx={{ color: theme.palette.text.primary, fontWeight: "500" }}
+                  sx={{ color: "white", fontWeight: "500" }}
                 >
                   {username}
                 </Typography>

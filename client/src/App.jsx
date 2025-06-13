@@ -36,20 +36,20 @@ function App() {
     () =>
       createTheme({
         palette: {
-          mode, // This will be 'light' or 'dark'
+          mode,
           primary: {
-            main: mode === "light" ? "rgb(51, 117, 222)" : "#90caf9", // Example primary color for light/dark
+            main: mode === "light" ? "rgb(51, 117, 222)" : "#rgb(5, 13, 26)",
           },
           secondary: {
-            main: mode === "light" ? "rgb(87, 175, 159)" : "#f48fb1", // Example secondary color
+            main: mode === "light" ? "rgb(87, 175, 159)" : "#rgb(30, 222, 132)",
           },
           background: {
-            default: mode === "light" ? "rgb(240, 242, 245)" : "#121212", // Light grey for light, dark for dark
-            paper: mode === "light" ? "rgb(255, 255, 255)" : "#1e1e1e", // White for light, slightly lighter dark for paper
+            default: mode === "light" ? "rgb(240, 242, 245)" : "#121212",
+            paper: mode === "light" ? "rgb(255, 255, 255)" : "#1e1e1e",
           },
         },
         typography: {
-          fontFamily: "Roboto, sans-serif", // Ensure consistent font
+          fontFamily: "Roboto, sans-serif",
         },
         components: {
           MuiCssBaseline: {
@@ -118,12 +118,10 @@ function App() {
 
               <Box sx={{ flexGrow: 1 }}>
                 <Routes>
-                  {/* Public routes */}
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
 
-                  {/* Protected route */}
                   <Route
                     path="/dashboard"
                     element={
@@ -135,7 +133,6 @@ function App() {
                     }
                   />
 
-                  {/* Redirect root */}
                   <Route
                     path="/"
                     element={
@@ -147,7 +144,6 @@ function App() {
                     }
                   />
 
-                  {/* 404 */}
                   <Route
                     path="*"
                     element={

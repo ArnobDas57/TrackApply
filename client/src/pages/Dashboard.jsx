@@ -350,26 +350,40 @@ const Dashboard = () => {
           <TextField
             fullWidth
             label="Search by company or position..."
-            variant="outlined"
+            variant="filled"
             value={searchTerm}
             onChange={handleSearchChange}
+            color="white"
+            InputLabelProps={{
+              sx: {
+                color: "white",
+              },
+            }}
             sx={{
               width: 500,
-              backgroundColor: "white",
+              backgroundColor: "rgb(127, 160, 217)",
             }}
           />
 
           <FormControl
             sx={{
               width: 500,
-              backgroundColor: "white",
+              backgroundColor: "rgb(127, 160, 217)",
             }}
           >
-            <InputLabel id="status-filter-label">Status</InputLabel>
+            <InputLabel
+              id="status-filter-label"
+              sx={{
+                color: "white",
+              }}
+            >
+              Status
+            </InputLabel>
             <Select
               labelId="status-filter-label"
               value={statusFilter}
               label="Status"
+              sx={{ color: "white" }}
               onChange={handleStatusFilterChange}
             >
               {STATUSES.map((status) => (
@@ -414,7 +428,7 @@ const Dashboard = () => {
               sx={{
                 p: 3,
                 width: 500,
-                backgroundColor: "white",
+                backgroundColor: "rgb(127, 160, 217)",
                 borderRadius: 3,
               }}
             >
@@ -423,6 +437,7 @@ const Dashboard = () => {
                   {app.job_title}
                 </Typography>
                 <Typography variant="subtitle1">{app.company_name}</Typography>
+                <Divider />
                 <Typography variant="body2" color="text.secondary">
                   Status:{" "}
                   <span style={{ fontWeight: "bold" }}>
