@@ -1,21 +1,36 @@
-import { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   Box,
   Typography,
-  Divider,
   Button,
   Tooltip,
   Avatar,
   Stack,
   Menu,
   MenuItem,
+  AppBar, // Recommended for headers
+  Toolbar, // Recommended for headers
+  IconButton, // For the theme toggle button
+  useTheme, // Hook to access the current theme
 } from "@mui/material";
+import Brightness4Icon from "@mui/icons-material/Brightness4"; // Moon icon for light mode
+import Brightness7Icon from "@mui/icons-material/Brightness7"; // Sun icon for dark mode
 import { SiPivotaltracker } from "react-icons/si";
 import { GrLogout } from "react-icons/gr";
+import { useNavigate, Link } from "react-router-dom"; // Import Link for proper navigation
+import { AuthContext, ThemeContext } from "../App"; // Ensure this path is correct
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+
+  // Consume AuthContext
+  const { isAuthenticated, username, handleLogout } = useContext(AuthContext);
+  // Consume ThemeContext
+  const { mode, toggleColorMode } = useContext(ThemeContext);
+  // Get the current theme to access palette colors
+  const theme = useTheme();
 
   const handleAvatarClick = (e) => {
     setAnchorEl(e.currentTarget);
@@ -25,59 +40,163 @@ const Header = () => {
     setAnchorEl(null);
   };
 
+  const handleLogoutClick = () => {
+    handleMenuClose();
+    handleLogout();
+    navigate("/login");
+  };
+
+  const getFirstLetter = (name) => {
+    return name ? name.charAt(0).toUpperCase() : "";
+  };
+
   return (
-    <Box
+    // AppBar provides better structure and default styling for headers
+    <AppBar
+      position="static"
       sx={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        gap: 1.5,
-        p: 2,
+        // Use theme palette for background
+        backgroundColor:
+          theme.palette.mode === "light"
+            ? "rgb(37, 50, 88)"
+            : theme.palette.background.paper,
         mb: 4,
-        backgroundColor: "rgb(37, 50, 88)",
+        boxShadow: theme.shadows[4], // Add a subtle shadow
       }}
     >
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
-        <SiPivotaltracker size="35" color="rgb(136, 227, 183)" />
-        <Typography
-          sx={{ fontWeight: "bolder", fontSize: "2rem", color: "#f1f1f1" }}
-        >
-          TrackApply
-        </Typography>
-      </Box>
-
-      <Stack direction="row" spacing={4} alignItems="center">
-        <Stack direction="row" spacing={1.5} alignItems="center">
-          <Typography sx={{ color: "white", fontWeight: "500" }}>
-            Name Last
+      <Toolbar
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 1.5,
+          p: 2, // Padding applied to Toolbar
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+          {/* Using theme.palette for icon color for better consistency */}
+          <SiPivotaltracker size="35" color={theme.palette.secondary.light} />
+          <Typography
+            // Using theme.palette for text color
+            sx={{
+              fontWeight: "bolder",
+              fontSize: "2rem",
+              color: theme.palette.text.primary,
+            }}
+          >
+            <Link
+              to={isAuthenticated ? "/dashboard" : "/"}
+              style={{ textDecoration: "none", color: "white" }}
+            >
+              TrackApply
+            </Link>
           </Typography>
-          <Avatar
-            onClick={handleAvatarClick}
-            sx={{ color: "blue", backgroundColor: "white" }}
-          >
-            {"N"}
-          </Avatar>
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleMenuClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-          >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Logout</MenuItem>
-          </Menu>
-        </Stack>
+        </Box>
 
-        <Tooltip title="Log Out">
-          <Button>
-            <GrLogout color="white" size="30" />
-          </Button>
-        </Tooltip>
-      </Stack>
-    </Box>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          {/* Theme Toggle Button */}
+          <Tooltip
+            title={
+              mode === "dark" ? "Switch to light mode" : "Switch to dark mode"
+            }
+          >
+            <IconButton
+              sx={{ ml: 1 }}
+              onClick={toggleColorMode}
+              color="inherit"
+            >
+              {mode === "dark" ? (
+                <Brightness7Icon sx={{ color: theme.palette.warning.main }} />
+              ) : (
+                <Brightness4Icon sx={{ color: theme.palette.primary.light }} />
+              )}
+            </IconButton>
+          </Tooltip>
+
+          {isAuthenticated ? (
+            <Stack direction="row" spacing={4} alignItems="center">
+              <Stack direction="row" spacing={1.5} alignItems="center">
+                <Typography
+                  sx={{ color: theme.palette.text.primary, fontWeight: "500" }}
+                >
+                  {username}
+                </Typography>
+                <Avatar
+                  onClick={handleAvatarClick}
+                  sx={{
+                    color: theme.palette.primary.contrastText, // Text color on avatar
+                    backgroundColor: theme.palette.primary.main, // Avatar background color
+                    cursor: "pointer",
+                  }}
+                >
+                  {getFirstLetter(username)}
+                </Avatar>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleMenuClose}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                  transformOrigin={{ vertical: "top", horizontal: "right" }}
+                  PaperProps={{
+                    sx: {
+                      backgroundColor: theme.palette.background.paper, // Menu background
+                      color: theme.palette.text.primary, // Menu text color
+                    },
+                  }}
+                >
+                  <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+                  <MenuItem onClick={handleMenuClose}>Settings</MenuItem>
+                  <MenuItem onClick={handleLogoutClick}>
+                    <GrLogout
+                      style={{
+                        marginRight: "8px",
+                        color: theme.palette.text.primary,
+                      }}
+                    />{" "}
+                    Logout
+                  </MenuItem>
+                </Menu>
+              </Stack>
+
+            </Stack>
+          ) : (
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Button
+                variant="text"
+                sx={{ color: theme.palette.text.primary, fontWeight: "bold" }}
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </Button>
+              <Button
+                variant="contained"
+                // Use theme colors for consistent buttons
+                sx={{
+                  background:
+                    theme.palette.mode === "light"
+                      ? "linear-gradient(to right, rgb(32, 241, 217), rgb(60, 80, 160))"
+                      : theme.palette.secondary.main, // Or a specific dark mode gradient/color
+                  color:
+                    theme.palette.mode === "light"
+                      ? "white"
+                      : theme.palette.secondary.contrastText,
+                  fontWeight: "bold",
+                  "&:hover": {
+                    background:
+                      theme.palette.mode === "light"
+                        ? "rgb(79, 85, 107)"
+                        : theme.palette.secondary.dark,
+                  },
+                }}
+                onClick={() => navigate("/register")}
+              >
+                Sign Up
+              </Button>
+            </Stack>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };
 

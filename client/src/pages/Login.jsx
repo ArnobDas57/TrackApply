@@ -1,4 +1,4 @@
-import React, { useState } from "react"; // Fixed: useState imported from 'react'
+import React, { useState, useContext } from "react"; // Import useContext
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -9,28 +9,54 @@ import {
   FormControlLabel,
   Paper,
   Divider,
+  Alert,
+  CircularProgress,
 } from "@mui/material";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import { FaFacebookSquare } from "react-icons/fa";
+import { FaGithub, FaFacebookSquare } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
+import axios from "axios";
+import { AuthContext } from "../App"; // Import AuthContext from App.jsx
 
-const Login = ({ onLogin }) => {
-  const [email, setEmail] = useState("");
+const Login = () => {
+  // No longer expecting 'onLogin' as a prop
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  // Consume the AuthContext to get handleLogin
+  const { handleLogin: contextHandleLogin } = useContext(AuthContext); // Renamed to avoid conflict
+
+  const handleLogin = async (e) => {
     e.preventDefault();
+    setErrorMsg("");
+    setLoading(true);
 
-    // call authentication API
-    console.log("Attempting login with:", { email, password });
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/signin", {
+        identifier,
+        password,
+      });
 
-    if (onLogin) {
-      onLogin(email, password);
+      const token = res.data.token;
+      localStorage.setItem("token", token);
+
+      // Call the handleLogin function from context to update isAuthenticated in App.jsx
+      contextHandleLogin({ username: res.data.username }); // Call the function from context
+
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Login Failed:", err);
+      // More robust error handling: check for specific status codes if needed
+      const msg =
+        err?.response?.data?.message ||
+        "Invalid login credentials. Please try again.";
+      setErrorMsg(msg);
+    } finally {
+      setLoading(false);
     }
-
-    navigate("/"); // Redirect to dashboard after successful login
   };
 
   return (
@@ -38,7 +64,8 @@ const Login = ({ onLogin }) => {
       elevation={6}
       sx={{
         p: 0,
-        width: 600,
+        width: "100%",
+        maxWidth: 600,
         mx: "auto",
         mb: 5,
         borderRadius: "4px",
@@ -64,7 +91,7 @@ const Login = ({ onLogin }) => {
 
       <Box
         component="form"
-        onSubmit={handleLogin} // Added onSubmit handler
+        onSubmit={handleLogin}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -73,24 +100,30 @@ const Login = ({ onLogin }) => {
           borderRadius: "8px 8px 0 0",
         }}
       >
+        {errorMsg && (
+          <Alert severity="error" variant="filled">
+            {errorMsg}
+          </Alert>
+        )}
+
         <TextField
           required
-          label="Email"
-          placeholder="Enter an email/username."
+          label="Email or Username"
+          placeholder="Enter your email or username"
           variant="outlined"
           fullWidth
-          value={email} // Controlled component: value prop
-          onChange={(e) => setEmail(e.target.value)} // Controlled component: onChange prop
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
         />
         <TextField
           required
           label="Password"
-          placeholder="Enter a password."
+          placeholder="Enter your password"
           variant="outlined"
           type="password"
           fullWidth
-          value={password} // Controlled component: value prop
-          onChange={(e) => setPassword(e.target.value)} // Controlled component: onChange prop
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         <FormControlLabel
@@ -99,8 +132,9 @@ const Login = ({ onLogin }) => {
         />
 
         <Button
-          type="submit" // Added type="submit" to trigger form submission
+          type="submit"
           variant="contained"
+          disabled={loading}
           sx={{
             fontSize: "1rem",
             fontWeight: "bold",
@@ -108,16 +142,20 @@ const Login = ({ onLogin }) => {
             background:
               "linear-gradient(to right,rgb(32, 241, 217),rgb(60, 80, 160))",
             color: "white",
-            transition: "background-color 0.1s ease-in-out",
             "&:hover": {
               background: "rgb(79, 85, 107)",
             },
           }}
         >
-          Login
+          {loading ? (
+            <CircularProgress size={24} sx={{ color: "white" }} />
+          ) : (
+            "Login"
+          )}
         </Button>
 
         <Typography
+          onClick={() => navigate("/forgot-password")}
           variant="body2"
           sx={{
             textAlign: "right",
@@ -133,6 +171,7 @@ const Login = ({ onLogin }) => {
         </Typography>
 
         <Typography
+          onClick={() => navigate("/register")}
           variant="body2"
           sx={{
             textAlign: "right",
@@ -144,101 +183,8 @@ const Login = ({ onLogin }) => {
             },
           }}
         >
-          Don't have an account? Sign Up
+          Don’t have an account? Sign Up
         </Typography>
-
-        <Divider sx={{ my: 2 }} textAlign="center">
-          <Typography
-            variant="body2"
-            sx={{
-              fontSize: "1rem",
-              fontWeight: "bold",
-            }}
-          >
-            Or sign in with
-          </Typography>
-        </Divider>
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 3,
-            mt: 1,
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 45,
-              height: 45,
-              borderRadius: "50%",
-              cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)",
-              },
-            }}
-          >
-            <FcGoogle size="30" />
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 45,
-              height: 45,
-              borderRadius: "50%",
-              cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)",
-              },
-            }}
-          >
-            <FaFacebookSquare size="30" />
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 45,
-              height: 45,
-              borderRadius: "50%",
-              cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)",
-              },
-            }}
-          >
-            <FaGithub size="30" />
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 45,
-              height: 45,
-              borderRadius: "50%",
-              cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)",
-              },
-            }}
-          >
-            <FaLinkedin size="30" />
-          </Box>
-        </Box>
       </Box>
     </Paper>
   );

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react"; // Import useContext
 import {
   Box,
   Button,
@@ -8,13 +8,72 @@ import {
   FormControlLabel,
   Paper,
   Divider,
+  Alert,
+  CircularProgress, // Import CircularProgress for loading state
 } from "@mui/material";
+import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
-import { FaGithub } from "react-icons/fa";
-import { FaFacebookSquare } from "react-icons/fa";
+import { FaGithub, FaFacebookSquare } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../App"; // Import AuthContext from App.jsx
 
 const Register = () => {
+  // No longer expecting 'onRegister' as a prop
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
+  const navigate = useNavigate();
+
+  // Consume the AuthContext to get handleLogin (for auto-login after register)
+  const { handleLogin: contextHandleLogin } = useContext(AuthContext);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true); // Start loading
+
+    if (password !== confirmPassword) {
+      setLoading(false); // Stop loading on error
+      return setError("Passwords do not match");
+    }
+
+    if (password.length < 6) {
+      setLoading(false);
+      return setError("Password must be at least 6 characters long.");
+    }
+
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+        username,
+        email,
+        password,
+      });
+
+      if (res.status === 201 && res.data.token) {
+        localStorage.setItem("token", res.data.token);
+        contextHandleLogin({ username: res.data.username });
+        navigate("/dashboard");
+      } else {
+        setError(
+          "Registration successful, but couldn't auto-login. Please log in manually."
+        );
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error("Registration Failed:", err);
+      const msg =
+        err.response?.data?.message ||
+        "Registration failed. Please try again later.";
+      setError(msg);
+    } finally {
+      setLoading(false); // Stop loading regardless of success or failure
+    }
+  };
+
   return (
     <Paper
       elevation={6}
@@ -47,19 +106,42 @@ const Register = () => {
 
       <Box
         component="form"
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          gap: 3,
-          p: 4,
-        }}
+        onSubmit={handleSubmit}
+        sx={{ display: "flex", flexDirection: "column", gap: 3, p: 4 }}
       >
-        <TextField label="Email" variant="outlined" fullWidth />
+        {error && (
+          <Alert severity="error" variant="filled">
+            {error}
+          </Alert>
+        )}
+
+        <TextField
+          label="Username"
+          variant="outlined"
+          fullWidth
+          required
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
+        <TextField
+          label="Email"
+          variant="outlined"
+          fullWidth
+          required
+          type="email" // Added type="email" for better mobile keyboard and basic validation
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+
         <TextField
           label="Password"
           variant="outlined"
           type="password"
           fullWidth
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
 
         <TextField
@@ -67,10 +149,13 @@ const Register = () => {
           variant="outlined"
           type="password"
           fullWidth
+          required
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
         />
 
         <FormControlLabel
-          control={<Checkbox defaultChecked />}
+          control={<Checkbox required />}
           label={
             <Typography variant="body2">
               I agree to the{" "}
@@ -88,7 +173,9 @@ const Register = () => {
         />
 
         <Button
+          type="submit"
           variant="contained"
+          disabled={loading}
           sx={{
             fontSize: "1rem",
             fontWeight: "bold",
@@ -96,17 +183,21 @@ const Register = () => {
             background:
               "linear-gradient(to right,rgb(32, 241, 217),rgb(60, 80, 160))",
             color: "white",
-            transition: "background-color 0.1s ease-in-out",
             "&:hover": {
               background: "rgb(80, 88, 117)",
             },
           }}
         >
-          Sign Up
+          {loading ? (
+            <CircularProgress size={24} sx={{ color: "white" }} />
+          ) : (
+            "Sign Up"
+          )}
         </Button>
 
         <Typography
           variant="body2"
+          onClick={() => navigate("/login")}
           sx={{
             textAlign: "right",
             cursor: "pointer",
@@ -119,99 +210,6 @@ const Register = () => {
         >
           Already have an account? Login
         </Typography>
-
-        <Divider sx={{ my: 2 }} textAlign="center">
-          <Typography
-            variant="body2"
-            sx={{
-              fontSize: "1rem",
-              fontWeight: "bold",
-            }}
-          >
-            Or sign up with
-          </Typography>
-        </Divider>
-
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            gap: 3,
-            mt: 1,
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 45,
-              height: 45,
-              borderRadius: "50%",
-              cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)",
-              },
-            }}
-          >
-            <FcGoogle size="30" />
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 45,
-              height: 45,
-              borderRadius: "50%",
-              cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)",
-              },
-            }}
-          >
-            <FaFacebookSquare size="30" />
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 45,
-              height: 45,
-              borderRadius: "50%",
-              cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)",
-              },
-            }}
-          >
-            <FaGithub size="30" />
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              width: 45,
-              height: 45,
-              borderRadius: "50%",
-              cursor: "pointer",
-              transition: "background-color 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor: "rgb(113, 134, 137)",
-              },
-            }}
-          >
-            <FaLinkedin size="30" />
-          </Box>
-        </Box>
       </Box>
     </Paper>
   );
