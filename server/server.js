@@ -15,9 +15,11 @@ app.use(express.json());
 app.use(
   cors({
     origin: [
-      "http://localhost:5000",
-      "https://track-apply-nodeapp.vercel.app/api",
+      "http://localhost:5173", // for local dev with Vite
+      "https://track-apply-nodeapp-git-main-arnobdas57s-projects.vercel.app", // correct Vercel preview URL
+      "https://track-apply-nodeapp.vercel.app", // optional: final production domain
     ],
+    credentials: true,
   })
 );
 
