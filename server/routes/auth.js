@@ -57,26 +57,26 @@ const verifyToken = (req, res, next) => {
 };
 
 authRouter.post("/signup", async (req, res) => {
-  const { username, email, password } = req.body;
-
-  console.log(req.body);
-
-  if (!username || !email || !password) {
-    return res.status(400).json({ message: "Please enter all fields." });
-  }
-  if (password.length < 6) {
-    return res
-      .status(400)
-      .json({ message: "Password must be at least 6 characters long." });
-  }
-
   try {
+    const { username, email, password } = req.body;
+
+    console.log(req.body);
+
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: "Please enter all fields." });
+    }
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters long." });
+    }
+
     const existingUser = await pool.query(
       "SELECT * FROM users WHERE username = $1 OR email = $2",
       [username, email]
     );
 
-    console.log(existingUser.rows[0]);
+    console.log(existingUser, "This is existing user");
 
     if (existingUser.rows.length > 0) {
       const conflictField =
