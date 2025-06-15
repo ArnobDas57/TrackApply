@@ -16,7 +16,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5000",
-      "https://track-apply-nodeapp.vercel.app/",
+      "https://track-apply-nodeapp.vercel.app/api",
     ],
   })
 );
