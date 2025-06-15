@@ -7,7 +7,8 @@ console.log("Supabase Connection String:", process.env.SUPABASE_DB_URL);
 console.log("Type of Connection String:", typeof process.env.SUPABASE_DB_URL);
 
 const pool = new Pool({
-  connectionString: process.env.SUPABASE_DB_URL,
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
 
 export default pool;
