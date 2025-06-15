@@ -1,7 +1,5 @@
 import express from "express";
 import cors from "cors";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { jobRouter } from "./routes/jobs.js";
 import { authRouter } from "./routes/auth.js";
 import dotenv from "dotenv";

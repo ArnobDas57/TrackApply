@@ -59,6 +59,8 @@ const verifyToken = (req, res, next) => {
 authRouter.post("/signup", async (req, res) => {
   const { username, email, password } = req.body;
 
+  console.log(req.body);
+
   if (!username || !email || !password) {
     return res.status(400).json({ message: "Please enter all fields." });
   }
@@ -73,6 +75,8 @@ authRouter.post("/signup", async (req, res) => {
       "SELECT * FROM users WHERE username = $1 OR email = $2",
       [username, email]
     );
+
+    console.log(existingUser.rows[0]);
 
     if (existingUser.rows.length > 0) {
       const conflictField =
@@ -90,6 +94,8 @@ authRouter.post("/signup", async (req, res) => {
     );
 
     const newUser = result.rows[0];
+
+    console.log(newUser);
 
     const token = jwt.sign(
       { id: newUser.user_id, username: newUser.username },
