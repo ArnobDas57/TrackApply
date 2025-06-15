@@ -47,7 +47,7 @@ const Register = () => {
     }
 
     try {
-      const res = await axiosInstance.post({
+      const res = await axiosInstance.post("auth/api/signup", {
         username,
         email,
         password,
