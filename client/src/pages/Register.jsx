@@ -11,12 +11,12 @@ import {
   Alert,
   CircularProgress, // Import CircularProgress for loading state
 } from "@mui/material";
-import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaFacebookSquare } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App"; // Import AuthContext from App.jsx
+import axiosInstance from "../utils/axiosInstance";
 
 const Register = () => {
   // No longer expecting 'onRegister' as a prop
@@ -47,7 +47,7 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      const res = await axiosInstance.post({
         username,
         email,
         password,

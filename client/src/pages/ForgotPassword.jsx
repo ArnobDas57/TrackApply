@@ -10,7 +10,7 @@ import {
   Link,
   Divider,
 } from "@mui/material";
-import axios from "axios";
+import axiosInstance from "axios";
 import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
@@ -33,12 +33,9 @@ const ForgotPassword = () => {
         return;
       }
 
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/forgot-password",
-        {
-          email,
-        }
-      );
+      const res = await axiosInstance.post({
+        email,
+      });
 
       setSubmitted(true);
     } catch (err) {

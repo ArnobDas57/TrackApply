@@ -15,7 +15,7 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaFacebookSquare } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
-import axios from "axios";
+import axiosInstance from "axios";
 import { AuthContext } from "../App"; // Import AuthContext from App.jsx
 
 const Login = () => {
@@ -35,7 +35,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/signin", {
+      const res = await axiosInstance.post({
         identifier,
         password,
       });

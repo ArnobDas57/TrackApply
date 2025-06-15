@@ -10,8 +10,8 @@ import {
   Link as MuiLink, // Renamed to avoid conflict with react-router-dom Link if you add it later
   Divider,
 } from "@mui/material";
-import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom"; // Import useSearchParams
+import axiosInstance from "../utils/axiosInstance";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -36,9 +36,7 @@ const ResetPassword = () => {
       try {
         // You might have a backend endpoint to just validate the token
         // without setting a new password yet. This is optional but good practice.
-        await axios.get(
-          `http://localhost:5000/api/auth/validate-reset-token?token=${token}`
-        );
+        await axiosInstance.get();
         setTokenValid(true);
       } catch (err) {
         console.error("Token validation failed:", err);
@@ -79,13 +77,10 @@ const ResetPassword = () => {
     }
 
     try {
-      const res = await axios.post(
-        "http://localhost:5000/api/auth/reset-password", // Your backend reset endpoint
-        {
-          token, // Send the token
-          newPassword: password, // Send the new password
-        }
-      );
+      const res = await axiosInstance.post({
+        token, // Send the token
+        newPassword: password, // Send the new password
+      });
 
       setSuccessMsg(
         res.data.message || "Your password has been reset successfully!"
