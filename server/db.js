@@ -11,4 +11,12 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
+pool.query("SELECT NOW()", (err, res) => {
+  if (err) {
+    console.error("DB Connection Failed:", err);
+  } else {
+    console.log("DB Connected. Time is:", res.rows[0]);
+  }
+});
+
 export default pool;
