@@ -116,9 +116,7 @@ const Header = () => {
           {isAuthenticated ? (
             <Stack direction="row" spacing={4} alignItems="center">
               <Stack direction="row" spacing={1.5} alignItems="center">
-                <Typography
-                  sx={{ color: "white", fontWeight: "500" }}
-                >
+                <Typography sx={{ color: "white", fontWeight: "500" }}>
                   {username}
                 </Typography>
                 <Avatar
@@ -157,13 +155,12 @@ const Header = () => {
                   </MenuItem>
                 </Menu>
               </Stack>
-
             </Stack>
           ) : (
             <Stack direction="row" spacing={2} alignItems="center">
               <Button
                 variant="text"
-                sx={{ color: theme.palette.text.primary, fontWeight: "bold" }}
+                sx={{ color: "white", fontWeight: "bold" }}
                 onClick={() => navigate("/login")}
               >
                 Login
@@ -173,19 +170,11 @@ const Header = () => {
                 // Use theme colors for consistent buttons
                 sx={{
                   background:
-                    theme.palette.mode === "light"
-                      ? "linear-gradient(to right, rgb(32, 241, 217), rgb(60, 80, 160))"
-                      : theme.palette.secondary.main, // Or a specific dark mode gradient/color
-                  color:
-                    theme.palette.mode === "light"
-                      ? "white"
-                      : theme.palette.secondary.contrastText,
+                    "linear-gradient(to right, rgb(32, 241, 217), rgb(60, 80, 160))",
+                  color: "white",
                   fontWeight: "bold",
                   "&:hover": {
-                    background:
-                      theme.palette.mode === "light"
-                        ? "rgb(79, 85, 107)"
-                        : theme.palette.secondary.dark,
+                    background: "rgb(84, 107, 136)",
                   },
                 }}
                 onClick={() => navigate("/register")}

@@ -12,7 +12,14 @@ const app = express();
 
 // initialize middleware
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5000",
+      "https://track-apply-nodeapp.vercel.app/",
+    ],
+  })
+);
 
 // Routes
 app.use("/api/jobs", jobRouter);

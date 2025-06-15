@@ -111,7 +111,9 @@ function App() {
                 flexDirection: "column",
                 minHeight: "100vh",
                 background:
-                  "linear-gradient(to left,rgb(87, 175, 159),rgb(119, 132, 190))",
+                  theme.palette.mode === "light"
+                    ? "linear-gradient(to left,rgb(87, 175, 159),rgb(119, 132, 190))"
+                    : theme.palette.background.paper,
               }}
             >
               <Header />
