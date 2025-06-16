@@ -5,7 +5,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import supabase from "../db";
+import supabase from "../db.js";
 import nodemailer from "nodemailer";
 
 export const authRouter = express.Router();
