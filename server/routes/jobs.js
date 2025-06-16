@@ -1,13 +1,94 @@
 import express from "express";
 import pool from "../db.js";
 import { verifyToken } from "../middleware/auth.js";
+import { body, validationResult } from "express-validator";
 
 export const jobRouter = express.Router();
 jobRouter.use(verifyToken);
 
+// Validation and sanitization rules for job fields
+const jobValidationRules = [
+  body("company_name")
+    .trim()
+    .notEmpty()
+    .withMessage("Company name is required")
+    .isLength({ max: 100 })
+    .withMessage("Company name too long"),
+  body("job_title")
+    .trim()
+    .notEmpty()
+    .withMessage("Job title is required")
+    .isLength({ max: 100 })
+    .withMessage("Job title too long"),
+  body("job_location")
+    .optional({ nullable: true })
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage("Job location too long"),
+  body("date_applied")
+    .notEmpty()
+    .withMessage("Date applied is required")
+    .isISO8601()
+    .withMessage("Date applied must be a valid date"),
+  body("salary_range")
+    .optional({ nullable: true })
+    .trim()
+    .isLength({ max: 50 })
+    .withMessage("Salary range too long"),
+  body("application_status")
+    .notEmpty()
+    .withMessage("Application status is required")
+    .isIn(["applied", "interview", "offer", "rejected", "withdrawn"]) // example statuses
+    .withMessage("Invalid application status"),
+  body("job_description_url")
+    .optional({ nullable: true })
+    .isURL()
+    .withMessage("Job description URL must be a valid URL"),
+  body("resume_version")
+    .optional({ nullable: true })
+    .trim()
+    .isLength({ max: 50 }),
+  body("cover_letter_sent")
+    .optional()
+    .isBoolean()
+    .withMessage("Cover letter sent must be boolean"),
+  body("notes")
+    .optional({ nullable: true })
+    .trim()
+    .isLength({ max: 1000 })
+    .withMessage("Notes too long"),
+  body("interview_date")
+    .optional({ nullable: true })
+    .isISO8601()
+    .withMessage("Interview date must be a valid date"),
+  body("offer_date")
+    .optional({ nullable: true })
+    .isISO8601()
+    .withMessage("Offer date must be a valid date"),
+  body("response_deadline")
+    .optional({ nullable: true })
+    .isISO8601()
+    .withMessage("Response deadline must be a valid date"),
+  body("rejection_date")
+    .optional({ nullable: true })
+    .isISO8601()
+    .withMessage("Rejection date must be a valid date"),
+];
+
+// Middleware to handle validation results
+const validate = (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    // Return all validation errors in an array
+    return res.status(400).json({ errors: errors.array() });
+  }
+  next();
+};
+
 // Add a new job application
-jobRouter.post("/", async (req, res) => {
+jobRouter.post("/", jobValidationRules, validate, async (req, res) => {
   try {
+    const user_id = req.user.id;
     const {
       company_name,
       job_title,
@@ -24,15 +105,6 @@ jobRouter.post("/", async (req, res) => {
       response_deadline,
       rejection_date,
     } = req.body;
-
-    if (!company_name || !job_title || !date_applied || !application_status) {
-      return res.status(400).json({
-        message:
-          "Company name, job title, date applied, and application status are required.",
-      });
-    }
-
-    const user_id = req.user.id;
 
     const result = await pool.query(
       `INSERT INTO jobs 
@@ -81,49 +153,8 @@ jobRouter.post("/", async (req, res) => {
   }
 });
 
-// Get all job applications for the current user
-jobRouter.get("/", async (req, res) => {
-  try {
-    const user_id = req.user.id;
-
-    const result = await pool.query(
-      `SELECT * FROM jobs WHERE user_id = $1 ORDER BY job_id DESC`,
-      [user_id]
-    );
-
-    res.status(200).json(result.rows);
-  } catch (error) {
-    console.error("Error fetching job applications:", error.message);
-    res.status(500).json({ message: "Server error. Please try again later." });
-  }
-});
-
-jobRouter.get("/:id", async (req, res) => {
-  try {
-    const job_id = req.params.id;
-    const user_id = req.user.id;
-
-    const result = await pool.query(
-      `SELECT * FROM jobs WHERE job_id = $1 AND user_id = $2`,
-      [job_id, user_id]
-    );
-
-    if (result.rows.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "Job application not found or unauthorized." });
-    }
-  } catch (error) {
-    console.error(
-      `Error fetching job application with ID ${req.params.id}:`,
-      error.message
-    );
-    res.status(500).json({ message: "Server error. Please try again later." });
-  }
-});
-
 // Update a job application
-jobRouter.put("/:id", async (req, res) => {
+jobRouter.put("/:id", jobValidationRules, validate, async (req, res) => {
   try {
     const job_id = req.params.id;
     const user_id = req.user.id;
@@ -190,28 +221,6 @@ jobRouter.put("/:id", async (req, res) => {
     res.status(200).json(result.rows[0]);
   } catch (error) {
     console.error("Error updating job application:", error.message);
-    res.status(500).json({ message: "Server error. Please try again later." });
-  }
-});
-
-// Delete a job application
-jobRouter.delete("/:id", async (req, res) => {
-  try {
-    const job_id = req.params.id;
-    const user_id = req.user.id;
-
-    const result = await pool.query(
-      `DELETE FROM jobs WHERE job_id = $1 AND user_id = $2 RETURNING *`,
-      [job_id, user_id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: "Job not found or unauthorized" });
-    }
-
-    res.status(200).json({ message: "Job deleted", job: result.rows[0] });
-  } catch (error) {
-    console.error("Error deleting job application:", error.message);
     res.status(500).json({ message: "Server error. Please try again later." });
   }
 });

@@ -1,22 +1,19 @@
-import pkg from "pg";
-const { Pool } = pkg;
 import dotenv from "dotenv";
 dotenv.config();
 
-console.log("Supabase Connection String:", process.env.SUPABASE_DB_URL);
-console.log("Type of Connection String:", typeof process.env.SUPABASE_DB_URL);
+import { createClient } from "@supabase/supabase-js";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-});
+// Log the environment variables (optional)
+console.log("Supabase URL:", process.env.SUPABASE_URL);
+console.log(
+  "Using Service Role Key:",
+  Boolean(process.env.SUPABASE_SERVICE_ROLE_KEY)
+);
 
-pool.query("SELECT NOW()", (err, res) => {
-  if (err) {
-    console.error("DB Connection Failed:", err);
-  } else {
-    console.log("DB Connected. Time is:", res.rows[0]);
-  }
-});
+// Create the Supabase client with server-side role
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-export default pool;
+export default supabase;

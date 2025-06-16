@@ -1,36 +1,44 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
+import helmet from "helmet";
+
 import { jobRouter } from "./routes/jobs.js";
 import { authRouter } from "./routes/auth.js";
-import dotenv from "dotenv";
+
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-// initialize middleware
+// Middleware
 app.use(express.json());
+app.use(helmet());
+
+// CORS setup
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // for local dev with Vite
-      "https://track-apply-nodeapp-git-main-arnobdas57s-projects.vercel.app", // correct Vercel preview URL
-      "https://track-apply-nodeapp.vercel.app", // optional: final production domain
+      "http://localhost:5173", // local dev (Vite)
+      "https://track-apply-nodeapp-git-main-arnobdas57s-projects.vercel.app", // preview deployment
+      "https://track-apply-nodeapp.vercel.app", // production deployment
     ],
-    credentials: true,
+    credentials: true, // allow sending credentials like cookies/headers
   })
 );
 
-// Routes
+// API routes
 app.use("/api/jobs", jobRouter);
 app.use("/api/auth", authRouter);
 
-// Check for unknown endpoints
-app.use((req, res) => {
+// Catch-all for undefined routes
+app.use("*", (req, res) => {
   res.status(404).json({
     message: "Endpoint not found. Please check the API documentation.",
   });
 });
 
-// Start our server
-app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+});
