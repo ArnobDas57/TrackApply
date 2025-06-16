@@ -17,6 +17,7 @@ Database: Supabase (PostgreSQL)
 
 
 ✨ Features
+
 🔐 User Authentication: Secure sign-up, login, and protected routes using JWT.
 📋 Job Tracker Dashboard: Add, view, edit, and delete job applications.
 🔄 Status Management: Track applications with predefined statuses:
@@ -26,6 +27,7 @@ Wishlist, Applied, Shortlisted, Interviewing, Offer, Rejected.
 📱 Responsive Design: Fully optimized for both desktop and mobile devices.
 
 ✅ Future Enhancements
+
 🔔 Email reminders for follow-ups
 📎 Resume & cover letter file uploads
 📊 Analytics dashboard (interview rate, etc.)
