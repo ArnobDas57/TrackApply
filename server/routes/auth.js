@@ -5,13 +5,8 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { createClient } from "@supabase/supabase-js";
+import supabase from "../db";
 import nodemailer from "nodemailer";
-
-const supabase = createClient(
-  process.env.VITE_SUPABASE_URL,
-  process.env.VITE_SUPABASE_ANON_KEY
-);
 
 export const authRouter = express.Router();
 
