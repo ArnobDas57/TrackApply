@@ -33,6 +33,8 @@ Wishlist, Applied, Shortlisted, Interviewing, Offer, Rejected.
 
 📱 Responsive Design: Fully optimized for both desktop and mobile devices.
 
+
+
 ✅ Future Enhancements
 
 🔔 Email reminders for follow-ups
