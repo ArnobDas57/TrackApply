@@ -35,7 +35,7 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axiosInstance.post("/api/auth/signin", {
+      const res = await axiosInstance.post("/auth/signin", {
         identifier,
         password,
       });
