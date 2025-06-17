@@ -15,7 +15,7 @@ import {
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub, FaFacebookSquare } from "react-icons/fa";
 import { FaLinkedin } from "react-icons/fa6";
-import axiosInstance from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { AuthContext } from "../App"; // Import AuthContext from App.jsx
 
 const Login = () => {
