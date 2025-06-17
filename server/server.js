@@ -3,8 +3,10 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 
+/* 
 import { jobRouter } from "./routes/jobs.js";
 import { authRouter } from "./routes/auth.js";
+*/
 
 dotenv.config();
 
@@ -18,6 +20,7 @@ app.use(helmet());
 // CORS setup
 const allowedOrigins = [
   "http://localhost:5173", // Vite local dev
+  process.env.CLIENT_URL,
   "https://track-apply-nodeapp.vercel.app",
   "https://track-apply-six.vercel.app", // production
 ];
@@ -39,8 +42,12 @@ app.use(
 app.options("*", cors());
 
 // API routes
-app.use("/api/jobs", jobRouter);
-app.use("/api/auth", authRouter);
+// app.use("/api/jobs", jobRouter);
+// app.use("/api/auth", authRouter);
+
+app.get("/test", (req, res) => {
+  res.send("Server works!");
+});
 
 // Catch-all for undefined routes
 app.use((req, res) => {
