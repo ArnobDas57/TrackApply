@@ -32,7 +32,7 @@ const jobValidationRules = [
     .isLength({ max: 50 }),
   body("application_status")
     .notEmpty()
-    .isIn(["applied", "interview", "offer", "rejected", "withdrawn"]),
+    .isIn(["Wishlist", "Applied", "Interviewing", "Offer", "Rejected", "Shortlisted"]),
   body("job_description_url").optional({ nullable: true }).isURL(),
   body("resume_version")
     .optional({ nullable: true })
