@@ -13,38 +13,77 @@ const jobValidationRules = [
     .notEmpty()
     .withMessage("Company name is required")
     .isLength({ max: 100 }),
+
   body("job_title")
     .trim()
     .notEmpty()
     .withMessage("Job title is required")
     .isLength({ max: 100 }),
-  body("job_location")
-    .optional({ nullable: true })
-    .trim()
-    .isLength({ max: 100 }),
+
   body("date_applied")
     .notEmpty()
     .withMessage("Date applied is required")
-    .isISO8601(),
-  body("salary_range")
-    .optional({ nullable: true })
-    .trim()
-    .isLength({ max: 50 }),
+    .isISO8601()
+    .withMessage("Date must be in ISO 8601 format (YYYY-MM-DD)"),
+
   body("application_status")
     .notEmpty()
-    .isIn(["Wishlist", "Applied", "Interviewing", "Offer", "Rejected", "Shortlisted"]),
-  body("job_description_url").optional({ nullable: true }).isURL(),
-  body("resume_version")
-    .optional({ nullable: true })
+    .withMessage("Application status is required")
+    .isIn(["Wishlist", "Applied", "Interviewing", "Offer", "Rejected", "Shortlisted"])
+    .withMessage("Invalid application status"),
+
+  // Optional fields
+  body("job_location")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 100 }),
+
+  body("salary_range")
+    .optional({ checkFalsy: true })
     .trim()
     .isLength({ max: 50 }),
-  body("cover_letter_sent").optional().isBoolean(),
-  body("notes").optional({ nullable: true }).trim().isLength({ max: 1000 }),
-  body("interview_date").optional({ nullable: true }).isISO8601(),
-  body("offer_date").optional({ nullable: true }).isISO8601(),
-  body("response_deadline").optional({ nullable: true }).isISO8601(),
-  body("rejection_date").optional({ nullable: true }).isISO8601(),
+
+  body("job_description_url")
+    .optional({ checkFalsy: true })
+    .isURL()
+    .withMessage("Must be a valid URL"),
+
+  body("resume_version")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 50 }),
+
+  body("cover_letter_sent")
+    .optional({ checkFalsy: true })
+    .isBoolean()
+    .withMessage("Must be true or false"),
+
+  body("notes")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 1000 }),
+
+  body("interview_date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage("Interview date must be a valid ISO 8601 date"),
+
+  body("offer_date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage("Offer date must be a valid ISO 8601 date"),
+
+  body("response_deadline")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage("Response deadline must be a valid ISO 8601 date"),
+
+  body("rejection_date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .withMessage("Rejection date must be a valid ISO 8601 date"),
 ];
+
 
 const validate = (req, res, next) => {
   const errors = validationResult(req);
