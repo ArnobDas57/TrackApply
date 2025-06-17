@@ -6,6 +6,15 @@ import { body, validationResult } from "express-validator";
 export const jobRouter = express.Router();
 jobRouter.use(verifyToken);
 
+const sanitizeEmptyStrings = (req, res, next) => {
+  Object.entries(req.body).forEach(([key, value]) => {
+    if (typeof value === "string" && value.trim() === "") {
+      req.body[key] = null;
+    }
+  });
+  next();
+};
+
 // Validation and sanitization rules
 const jobValidationRules = [
   body("company_name")
@@ -92,7 +101,7 @@ const validate = (req, res, next) => {
 };
 
 // POST /api/jobs
-jobRouter.post("/", jobValidationRules, validate, async (req, res) => {
+jobRouter.post("/", sanitizeEmptyStrings, jobValidationRules, validate, async (req, res) => {
   const user_id = req.user.id;
   const data = { ...req.body, user_id };
 
@@ -111,7 +120,7 @@ jobRouter.post("/", jobValidationRules, validate, async (req, res) => {
 });
 
 // PUT /api/jobs/:id
-jobRouter.put("/:id", jobValidationRules, validate, async (req, res) => {
+jobRouter.put("/:id", sanitizeEmptyStrings, jobValidationRules, validate, async (req, res) => {
   const job_id = req.params.id;
   const user_id = req.user.id;
 
