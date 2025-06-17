@@ -691,7 +691,7 @@ const Dashboard = () => {
               variant="contained"
               disabled={loading}
               color="white"
-              sx={{ mt: 3, py: 1.5, backgroundColor: "rgb(65,102,225) }}
+              sx={{ mt: 3, py: 1.5, backgroundColor: "rgb(65,102,225)" }}
             >
               {loading ? (
                 <CircularProgress size={24} />
