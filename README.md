@@ -4,7 +4,7 @@ TrackApply is a comprehensive job application tracking tool that enables users t
 
 🌐 Live Demo
 
-Frontend (React - Vercel): https://track-apply-nodeapp.vercel.app
+Frontend (React - Vercel): https://track-apply-six.vercel.app/
 
 Backend (Node.js/Express - Render): https://track-apply-server.onrender.com (API only)
 
