@@ -690,7 +690,8 @@ const Dashboard = () => {
               type="submit"
               variant="contained"
               disabled={loading}
-              sx={{ mt: 3, py: 1.5 }}
+              color="white"
+              sx={{ mt: 3, py: 1.5, backgroundColor: "rgb(65,102,225) }}
             >
               {loading ? (
                 <CircularProgress size={24} />
