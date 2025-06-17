@@ -16,16 +16,27 @@ app.use(express.json());
 app.use(helmet());
 
 // CORS setup
+const allowedOrigins = [
+  "http://localhost:5173", // Vite local dev
+  "https://track-apply-nodeapp.vercel.app",
+  "https://track-apply-six.vercel.app", // production
+];
+
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173", // local dev (Vite)
-      "https://track-apply-nodeapp.vercel.app", 
-      "https://track-apply-six.vercel.app",// production deployment
-    ],
-    credentials: true, // allow sending credentials like cookies/headers
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
+
+// Preflight support
+app.options("*", cors());
 
 // API routes
 app.use("/api/jobs", jobRouter);
