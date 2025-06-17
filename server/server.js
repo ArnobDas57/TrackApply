@@ -20,8 +20,8 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173", // local dev (Vite)
-      "https://track-apply-nodeapp-git-main-arnobdas57s-projects.vercel.app", // preview deployment
-      "https://track-apply-nodeapp.vercel.app", // production deployment
+      "https://track-apply-nodeapp.vercel.app", 
+      "https://track-apply-six.vercel.app",// production deployment
     ],
     credentials: true, // allow sending credentials like cookies/headers
   })
