@@ -2,7 +2,10 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://trackapply-api.onrender.com/api/", // Base URL for your API
+  baseURL: "https://trackapply-api.onrender.com/api/",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 axiosInstance.interceptors.request.use(
