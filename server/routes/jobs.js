@@ -20,11 +20,21 @@ const jobValidationRules = [
     .withMessage("Job title is required")
     .isLength({ max: 100 }),
 
+  body("job_location")
+    .optional({ checkFalsy: true, nullable: true })
+    .trim()
+    .isLength({ max: 100 }),
+
   body("date_applied")
     .notEmpty()
     .withMessage("Date applied is required")
     .isISO8601()
-    .withMessage("Date must be in ISO 8601 format (YYYY-MM-DD)"),
+    .withMessage("Invalid date format"),
+
+  body("salary_range")
+    .optional({ checkFalsy: true, nullable: true })
+    .trim()
+    .isLength({ max: 50 }),
 
   body("application_status")
     .notEmpty()
@@ -32,56 +42,45 @@ const jobValidationRules = [
     .isIn(["Wishlist", "Applied", "Interviewing", "Offer", "Rejected", "Shortlisted"])
     .withMessage("Invalid application status"),
 
-  // Optional fields
-  body("job_location")
-    .optional({ checkFalsy: true })
-    .trim()
-    .isLength({ max: 100 }),
-
-  body("salary_range")
-    .optional({ checkFalsy: true })
-    .trim()
-    .isLength({ max: 50 }),
-
   body("job_description_url")
-    .optional({ checkFalsy: true })
+    .optional({ checkFalsy: true, nullable: true })
     .isURL()
     .withMessage("Must be a valid URL"),
 
   body("resume_version")
-    .optional({ checkFalsy: true })
+    .optional({ checkFalsy: true, nullable: true })
     .trim()
     .isLength({ max: 50 }),
 
   body("cover_letter_sent")
-    .optional({ checkFalsy: true })
+    .optional({ checkFalsy: true, nullable: true })
     .isBoolean()
     .withMessage("Must be true or false"),
 
   body("notes")
-    .optional({ checkFalsy: true })
+    .optional({ checkFalsy: true, nullable: true })
     .trim()
     .isLength({ max: 1000 }),
 
   body("interview_date")
-    .optional({ checkFalsy: true })
+    .optional({ checkFalsy: true, nullable: true })
     .isISO8601()
-    .withMessage("Interview date must be a valid ISO 8601 date"),
+    .withMessage("Invalid date format"),
 
   body("offer_date")
-    .optional({ checkFalsy: true })
+    .optional({ checkFalsy: true, nullable: true })
     .isISO8601()
-    .withMessage("Offer date must be a valid ISO 8601 date"),
+    .withMessage("Invalid date format"),
 
   body("response_deadline")
-    .optional({ checkFalsy: true })
+    .optional({ checkFalsy: true, nullable: true })
     .isISO8601()
-    .withMessage("Response deadline must be a valid ISO 8601 date"),
+    .withMessage("Invalid date format"),
 
   body("rejection_date")
-    .optional({ checkFalsy: true })
+    .optional({ checkFalsy: true, nullable: true })
     .isISO8601()
-    .withMessage("Rejection date must be a valid ISO 8601 date"),
+    .withMessage("Invalid date format"),
 ];
 
 
