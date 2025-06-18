@@ -10,7 +10,7 @@ import {
   Link,
   Divider,
 } from "@mui/material";
-import axiosInstance from "axios";
+import axiosInstance from "../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 
 const ForgotPassword = () => {
@@ -33,16 +33,18 @@ const ForgotPassword = () => {
         return;
       }
 
-      const res = await axiosInstance.post({
+      const res = await axiosInstance.post("auth/forgot-password", {
         email,
       });
 
       setSubmitted(true);
     } catch (err) {
       console.error("Forgot password request failed:", err);
+
       const msg =
         err.response?.data?.message ||
         "Something went wrong. Please try again.";
+        
       setErrorMsg(msg);
     } finally {
       setLoading(false);
@@ -99,7 +101,6 @@ const ForgotPassword = () => {
         {submitted ? (
           <Alert severity="success" variant="filled">
             {" "}
-            {/* Consistent success message */}
             If an account with that email exists, a password reset link has been
             sent to your inbox.
           </Alert>
