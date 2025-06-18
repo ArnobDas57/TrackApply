@@ -102,6 +102,7 @@ authRouter.post("/signin", async (req, res) => {
 
     const user = data[0];
     const isMatch = await bcrypt.compare(password, user.password);
+    
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials." });
 
@@ -165,7 +166,10 @@ authRouter.post("/forgot-password", async (req, res) => {
       })
       .eq("email", email);
 
-    const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${token}`;
+    const baseUrl =
+      process.env.CLIENT_URL || "https://track-apply-six.vercel.app";
+
+    const resetLink = `${baseUrl}/reset-password?token=${token}`;
 
     await transporter.sendMail({
       from: '"Job Tracker App" <no-reply@jobtracker.com>',

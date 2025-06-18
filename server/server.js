@@ -3,10 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import helmet from "helmet";
 
-/* 
 import { jobRouter } from "./routes/jobs.js";
 import { authRouter } from "./routes/auth.js";
-*/
 
 dotenv.config();
 
@@ -42,12 +40,8 @@ app.use(
 app.options("*", cors());
 
 // API routes
-// app.use("/api/jobs", jobRouter);
-// app.use("/api/auth", authRouter);
-
-app.get("/test", (req, res) => {
-  res.send("Server works!");
-});
+app.use("/api/jobs", jobRouter);
+app.use("/api/auth", authRouter);
 
 // Catch-all for undefined routes
 app.use((req, res) => {
