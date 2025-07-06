@@ -33,7 +33,7 @@ const ForgotPassword = () => {
         return;
       }
 
-      const res = await axiosInstance.post("auth/forgot-password", {
+      await axiosInstance.post("auth/forgot-password", {
         email,
       });
 
@@ -44,7 +44,7 @@ const ForgotPassword = () => {
       const msg =
         err.response?.data?.message ||
         "Something went wrong. Please try again.";
-        
+
       setErrorMsg(msg);
     } finally {
       setLoading(false);

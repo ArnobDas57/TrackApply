@@ -18,7 +18,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import ForgotPassword from "./pages/ForgotPassword";
+import VantaBackground from "./components/VantaBackground";
 
 export const ThemeContext = createContext();
 export const AuthContext = createContext();
@@ -58,7 +60,7 @@ function App() {
                 // Dynamic background based on theme mode
                 background:
                   mode === "light"
-                    ? "linear-gradient(to right, rgb(87, 175, 159), rgb(119, 132, 190))"
+                    ? "linear-gradient(to right, #e0eafc, #cfdef3)"
                     : "linear-gradient(to right, #2c3e50, #34495e)", // Darker gradient for dark mode
               },
             },
@@ -101,19 +103,20 @@ function App() {
     <Router>
       <ThemeContext.Provider value={{ mode, toggleColorMode }}>
         <AuthContext.Provider
-          value={{ isAuthenticated, username, handleLogin, handleLogout }}
+          value={{ isAuthenticated, username, handleLogin, handleLogout, mode }}
         >
           <ThemeProvider theme={theme}>
             <CssBaseline />
+
+            <VantaBackground themeMode={mode} />
+
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 minHeight: "100vh",
-                background:
-                  theme.palette.mode === "light"
-                    ? "linear-gradient(to left,rgb(87, 175, 159),rgb(119, 132, 190))"
-                    : theme.palette.background.paper,
+                position: "relative",
+                zIndex: 1, // Push content above background
               }}
             >
               <Header />
@@ -123,7 +126,6 @@ function App() {
                   <Route path="/login" element={<Login />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
-
                   <Route
                     path="/dashboard"
                     element={
@@ -134,7 +136,6 @@ function App() {
                       )
                     }
                   />
-
                   <Route
                     path="/"
                     element={
@@ -145,7 +146,6 @@ function App() {
                       )
                     }
                   />
-
                   <Route
                     path="*"
                     element={
@@ -168,6 +168,7 @@ function App() {
                   />
                 </Routes>
               </Box>
+              <Footer />
             </Box>
           </ThemeProvider>
         </AuthContext.Provider>

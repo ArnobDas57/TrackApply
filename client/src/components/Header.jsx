@@ -56,10 +56,7 @@ const Header = () => {
       position="static"
       sx={{
         // Use theme palette for background
-        backgroundColor:
-          theme.palette.mode === "light"
-            ? "rgb(37, 50, 88)"
-            : theme.palette.background.paper,
+        backgroundColor: theme.palette.mode === "light" ? "#5081E2cc" : "black",
         mb: 4,
         boxShadow: theme.shadows[4], // Add a subtle shadow
       }}
@@ -106,9 +103,9 @@ const Header = () => {
               color="inherit"
             >
               {mode === "dark" ? (
-                <Brightness7Icon sx={{ color: theme.palette.warning.main }} />
+                <Brightness7Icon sx={{ color: "gold" }} />
               ) : (
-                <Brightness4Icon sx={{ color: theme.palette.primary.light }} />
+                <Brightness4Icon sx={{ color: "black" }} />
               )}
             </IconButton>
           </Tooltip>
