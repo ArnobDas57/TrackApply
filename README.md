@@ -1,8 +1,8 @@
-🎯 TrackApply: Job Application Tracker
+# 🎯 TrackApply: Job Application Tracker
 
 TrackApply is a comprehensive job application tracking tool that enables users to efficiently organize and manage their job search. It features a modern UI, secure authentication, and intuitive tools to monitor application progress.
 
-🌐 Live Demo
+## 🌐 Live Demo
 
 Frontend (React - Vercel): https://track-apply-six.vercel.app/
 
@@ -10,7 +10,7 @@ Backend (Node.js/Express - Render): https://track-apply-server.onrender.com (API
 
 Database: Supabase (PostgreSQL)
 
-⚙️ Tech Stack
+## ⚙️ Tech Stack
 
 | Frontend          | Backend           | Database            | Tools / Auth              |
 | ----------------- | ----------------- | ------------------- | ------------------------- |
@@ -18,7 +18,7 @@ Database: Supabase (PostgreSQL)
 | Material UI (MUI) | CORS, Helmet      | Supabase JS SDK     | dotenv, express-validator |
 
 
-✨ Features
+## ✨ Features
 
 🔐 User Authentication: Secure sign-up, login, and protected routes using JWT.
 
@@ -35,7 +35,7 @@ Wishlist, Applied, Shortlisted, Interviewing, Offer, Rejected.
 
 
 
-✅ Future Enhancements
+## ✅ Future Enhancements
 
 🔔 Email reminders for follow-ups
 
