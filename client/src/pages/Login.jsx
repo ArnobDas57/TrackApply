@@ -99,7 +99,7 @@ const Login = () => {
           }}
         >
           <Typography variant="h5" fontWeight="bold">
-            Log in to Repo Explorer
+            Log in to TrackApply
           </Typography>
         </Box>
 
